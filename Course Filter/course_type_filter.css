@@ -1,0 +1,48 @@
+.context_module_item .ig-type-icon i,
+#select_context_content_dialog i,
+#module_filters i {
+    background-color: var(--ic-brand-button--primary-bgd);
+    padding: 7px;
+    border-radius: 100px;
+    color: #fff !important;
+}
+
+.context_module_item .ig-type-icon i.icon-document,
+#select_context_content_dialog i.icon-document,
+#module_filters i.icon-document {
+    background-color: #F46036;
+}
+
+.context_module_item .ig-type-icon i.icon-paperclip,
+#select_context_content_dialog i.icon-paperclip,
+#module_filters i.icon-paperclip {
+   background-color: #2E294E;
+}
+
+.context_module_item .ig-type-icon i.icon-discussion,
+#select_context_content_dialog i.icon-discussion,
+#module_filters i.icon-discussion {
+    background-color: #1B998B;
+}
+
+.context_module_item .ig-type-icon i.icon-assignment,
+#select_context_content_dialog i.icon-assignment,
+#module_filters i.icon-assignment {
+    background-color: #228ACC;
+}
+
+.context_module_item .ig-type-icon i.icon-quiz,
+#select_context_content_dialog i.icon-quiz,
+#module_filters i.icon-quiz {
+    background-color: #E07BC4;
+}
+
+.context_module_item .ig-type-icon i.icon-link,
+#select_context_content_dialog i.icon-link,
+#module_filters i.icon-link {
+    background-color: #6E6FBD;
+}
+
+#module_filters i.disabled {
+    background-color:darkgrey !important;
+}

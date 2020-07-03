@@ -1,0 +1,117 @@
+/***************************************************/
+/***** LOGIN PAGE                             ******/
+/***************************************************/
+
+/*resize the login box to fit my image and change the color of 'stay signed in'*/
+body.ic-Login-Body {
+	background-image: url(https://ait.instructure.com/courses/1962/files/445090/preview) !;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+body.modal #modal-box.login-box { 
+  height: 405px;
+  width: 623px;
+  color: #071135;
+}
+
+video#bgvid { 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+video#bgvid {
+    transition: 1s opacity;
+}
+
+.video-dottedoverlay {
+    background-image: url('https://ait.instructure.com/courses/1962/files/445063/preview');
+    background-repeat: repeat;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 3;
+}
+
+
+#modal-box .btn { margin-right: 10px !important; }
+
+/*change the color of the login button*/
+
+/*login box*/
+
+body.modal #modal-box.login-box { 
+ background-size: 560px; 
+ background-color: rgba(0,0,0, .75);
+ box-shadow: none; -moz-box-shadow:none; -webkit-box-shadow:none;
+}
+
+body.modal.no-headers #footer-links a {
+    color:#fff;
+}
+
+.ic-Login__actions .Button--login {
+    background-color: #727272;
+    background-image: none;
+    border-color: #727272;
+    color:#fff;
+    -webkit-transition: all 500ms ease-out .5s;
+    -moz-transition: all 500ms ease-out .5s;
+    -o-transition: all 500ms ease-out .5s;
+    transition: all 500ms ease-out .5s;
+}
+
+#modal-box.login-box {
+    background-color: transparent; 
+    box-shadow: none; 
+    -moz-box-shadow:none; 
+    webkit-box-shadow:none;
+}  
+  
+#login_form .login-options { 
+    color: gray; 
+}
+
+/*change the color of 'don't know your password'*/
+body.modal #modal-box.login-box a { 
+    color: gray !important; 
+}
+
+#forgot_password_instructions{
+    color:#fff !important;
+}
+
+body.modal #modal-box.login-box a {
+    color: #fff !important;
+}
+
+.ic-Login__content {
+	background-color:rgb(20,175,178);
+}
+
+.ic-Login-header__logo {
+    background: url(https://ait.instructure.com/courses/1962/files/445090/preview);
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 350px;
+    height:80px;
+}
+
+.ic-Login-header__logo img {
+    display:none;
+}
+
+/* @end */

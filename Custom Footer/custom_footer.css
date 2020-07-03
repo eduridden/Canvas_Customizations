@@ -1,0 +1,27 @@
+/***************************************************/
+/***** CUSTOM FOOTER                  **************/
+/***************************************************/
+#footer {
+    display:none;  
+}
+
+#ait-footer .footer-logo {
+    background-color: transparent;  
+    background-image: url(https://du11hjcvx0uqb.cloudfront.net/dist/images/footer-logo-878a92a06f.png);  
+    background-repeat: no-repeat;  
+    background-position: left top;  
+    display: inline-block;  
+    height: 16px;  
+    margin: 0 20px 0 0;  
+    width: 114px;  
+}
+
+#ait-footer .ic-app-footer {
+    background-color: #fff;  
+}
+
+
+/* Remove BBB Alert */
+div#big-blue-button-message-container {
+display: none;  
+}
