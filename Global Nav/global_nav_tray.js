@@ -14,26 +14,25 @@ $(document).ready(function() {
     ///* set tray title, icon, links and footer here *///
     ///*  for user role based conditions see README  *///
     var title   = 'Online Resources',
-		svg     = 'https://eduridden.github.io/Canvas_Code/AIT/library.svg',
+		svg     = 'https://eduridden.github.io/Canvas_Code/defaults/library.svg',
+
 		// default links for all users
 		trayLinks = [
-			{ href: 'https://ait.instructure.com/courses/1970/announcements', svg_icon: 'link', title: 'Student News', desc:'Important updates and events for students' },
-            { href: 'https://ait.instructure.com/courses/1972', svg_icon: 'link', title: 'College Library', desc:'Access the College Library services online' },
-			{ href: 'https://redhill.freshdesk.com/', svg_icon: 'link', title: 'Online Learning Support', desc:'Got a problem? Contact support through the helpdesk' },
-            { href: 'https://redhill.freshdesk.com/support/solutions', svg_icon: 'link', title: 'Self Help Guides', desc:'Help yourself with these great online guides' },
-            { href: 'http://ait.checkfront.com/reserve', svg_icon: 'link', title: 'Lab Bookings - MLB', desc:'Book a space in a Melbourne Computer Lab' },
-            { href: 'http://aitbookings.checkfront.com/reserve', svg_icon: 'link', title: 'Lab Bookings - SYD', desc:'Book a space in a Sydney Computer Lab' }
+			{ href: 'http://www.example.com', svg_icon: 'link', title: 'Student News', desc:'Important updates and events for students' },
+      { href: 'http://www.example.com', svg_icon: 'link', title: 'College Library', desc:'Access the College Library services online' },
+			{ href: 'http://www.example.com', svg_icon: 'link', title: 'Online Learning Support', desc:'Got a problem? Contact support through the helpdesk' },
+      { href: 'http://www.example.com', svg_icon: 'link', title: 'Self Help Guides', desc:'Help yourself with these great online guides' },
+      { href: 'http://www.example.com', svg_icon: 'link', title: 'Lab Bookings - MLB', desc:'Book a space in a Melbourne Computer Lab' }
 		],
-		footer  = '<center><img src="https://eduridden.github.io/Canvas_Code/AIT/helpful_panda.png" width="110px" alt="Panda"></center><p>These links are provided to enable you with all the information you need to study online.</p>';
-	
-	// these links are appended to the tray by user role
-    
-	//if(ENV.current_user_roles.indexOf('teacher') >= 0 || ENV.current_user_roles.indexOf('admin') >= 0){
-        //trayLinks.push({ href: 'http://www.example.com/your-library', title: 'Teacher Library', desc:'Optional text description' })
-    //} else if (ENV.current_user_roles.indexOf('student') >= 0) {
-        //trayLinks.push({ href: 'https://ait.instructure.com/courses/1962', title: 'Canvas Student Guide', desc:'Start here if you want to learn how to use Canvas better.' })
-    //}
-        
+		footer  = '<center><img src="https://eduridden.github.io/Canvas_Code/defaults/helpful_panda.png" width="110px" alt="Panda"></center><p>These links are provided to enable you with all the information you need to study online.</p>';
+
+		// these links are appended to the tray by user role
+    if(ENV.current_user_roles.indexOf('teacher') >= 0 || ENV.current_user_roles.indexOf('admin') >= 0){
+      trayLinks.push({ href: 'http://www.example.com', title: 'Teacher Library', desc:'Optional text description' })
+    } else if (ENV.current_user_roles.indexOf('student') >= 0) {
+      trayLinks.push({ href: 'http://www.example.com', title: 'Canvas Student Guide', desc:'Start here if you want to learn how to use Canvas better.' })
+    }
+
     ///* options are above for convenience, continue if you like *///
     var tidle     = title.replace(/\s/, '_').toLowerCase(),
         trayid    = 'global_nav_'+tidle+'_tray',
@@ -41,14 +40,14 @@ $(document).ready(function() {
         trayLinks = trayLinks.forEach(function(link) {
             trayItems += '<li class="gcnt-list-item">'
                       + '<span class="gcnt-list-link-wrapper">'
-                      + '<a target="_blank" rel="noopener" class="gcnt-list-link" href="'+link.href+'" role="button" tabindex="0"><img src="https://eduridden.github.io/Canvas_Code/AIT/' + link.svg_icon + '.svg" style="width:10px; padding-right: 5px;">'+ link.title +'</a>'
+                      + '<a target="_blank" rel="noopener" class="gcnt-list-link" href="'+link.href+'" role="button" tabindex="0"><img src="https://eduridden.github.io/Canvas_Code/defaults/' + link.svg_icon + '.svg" style="width:10px; padding-right: 5px;">'+ link.title +'</a>'
                       + '</span>';
             // append link description if set
             if(!!link.desc && link.desc.length > 1)
                 { trayItems +='<div class="gcnt-link-desc" style="padding-bottom: 5px;">'+ link.desc +'</div>' }
             trayItems += '</li>';
         }),
-        
+
         // tray html
         tray = '<span id="'+trayid+'" style="display: none;">'
             + '<span class="global-nav-custom-tray gnct-easing">'
