@@ -6,7 +6,7 @@
 **Original Source:** <https://github.com/benjaminselby/CanvasAvatarImageSync>
 **Canvas Discussion:** <https://community.canvaslms.com/t5/Canvas-Developers-Group/How-to-bulk-load-and-update-avatar-profile-pictures-with/ba-p/410101>
 
-##Description
+## Description
 
 The file which does the bulk of the work is #SyncCanvasAvatar.ps1#. This syncs an avatar image for a single Canvas user.
 
@@ -16,10 +16,10 @@ I will walk through the code a little bit below. Our in-house solution has quite
 
 I don't profess to be a Powershell expert, or a great programmer, so if anyone has feedback or comments, please let me know.
 
-##Requirements
+## Requirements
 To operate it is required you have Powershell 7 and Curl installed.
 
-##How it Works
+## How it Works
 
 A summary of the script's activity is:
 
