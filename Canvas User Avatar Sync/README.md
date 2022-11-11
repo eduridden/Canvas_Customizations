@@ -10,7 +10,7 @@
 
 ## Description
 
-The file which does the bulk of the work is #SyncCanvasAvatar.ps1#. This syncs an avatar image for a single Canvas user.
+The file which does the bulk of the work is *SyncCanvasAvatar.ps1*. This syncs an avatar image for a single Canvas user.
 
 The file *CanvasAvatarSyncAll.ps1* is the script which is called by Windows Task Scheduler. It obtains a list of all Canvas users in our domain, then loops through every one and syncs avatar images for all users with valid SIS ids. Anyone without a valid SIS ID is ignored (our Synergy database stores user images based on SIS ID lookup).
 
