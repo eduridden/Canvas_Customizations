@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////
-// START BULK STUDENT REMOMVAL TOOL               //
+// START BULK STUDENT REMOMAL TOOL               //
 ////////////////////////////////////////////////////
 // @name         Canvas Student Course Enrollment Manager
 // @namespace    https://github.com/sukotsuchido/CanvasUserScripts
