@@ -2,11 +2,11 @@
 
 ## Attribution Information
 
-** Author: ** Benjamin Selby
+**Author:** Benjamin Selby
 
-** Original Source: ** <https://github.com/benjaminselby/CanvasAvatarImageSync>
+**Original Source:** <https://github.com/benjaminselby/CanvasAvatarImageSync>
 
-** Canvas Discussion: ** <https://community.canvaslms.com/t5/Canvas-Developers-Group/How-to-bulk-load-and-update-avatar-profile-pictures-with/ba-p/410101>
+**Canvas Discussion:** <https://community.canvaslms.com/t5/Canvas-Developers-Group/How-to-bulk-load-and-update-avatar-profile-pictures-with/ba-p/410101>
 
 ## Description
 
