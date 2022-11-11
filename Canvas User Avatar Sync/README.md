@@ -1,6 +1,6 @@
 # Bulk Upload Canvas Avatars with PowerShell
 
-##Attribution Information
+## Attribution Information
 
 **Author:** Benjamin Selby
 **Original Source:** <https://github.com/benjaminselby/CanvasAvatarImageSync>
