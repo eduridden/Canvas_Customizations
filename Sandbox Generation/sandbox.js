@@ -4,210 +4,184 @@
 
 /**
 // @name        Canvas LMS - Create a Sandbox Button
-// @namespace   https://github.com//robert-carroll/ccsd-canvas
+// @namespace   https://github.com/eduridden/Canvas_Customizations
 // @author      Aaron Leonard <leonaa@nv.ccsd.net> [v1]
 // @author      Robert Carroll <carror@nv.ccsd.net> [v1.0.1]
+// @author      Julian Ridden <julian@quizizz.com> [v2]
 **/
 
+// Define a global object called `JR` so as not to pollute the global scope
+var JR = {
+    // Create a nested object to hold utility
+    util: {}
+}
+
+JR.util.onPage = function(rex, fn, fnfail) {
+    'use strict';
+
+    var match = location.pathname.match(rex);
+
+    if (typeof fn !== 'undefined' && match) {
+        return fn();
+    }
+    if (typeof fnfail !== 'undefined' && !match) {
+        return fnfail();
+    }
+    return match ? match : false;
+}
+
+JR.util.hasAnyRole = function() {
+    'use strict';
+
+    var roles = Array.from(arguments);
+    // Prevent errors if `ENV.current_user_roles` is not defined
+    if (!ENV || !Array.isArray(ENV.current_user_roles)) {
+        return false;
+    }
+    return roles.some(role => ENV.current_user_roles.includes(role));
+};
+
+
 (function() {
-  var handleNewCourse = function() {
-    ait.util.hasAnyRole("admin")
-      ? $("#start_new_course").show()
-      : $("#start_new_course").remove();
-  };
-  handleNewCourse();
+    var handleNewCourse = function() {
+        if (JR.util.hasAnyRole("admin")) {
+            // Show the element if the user has the "admin" role
+            document.getElementById('start_new_course').style.display = 'block';
+        } else {
+            // Otherwise, remove it
+            var element = document.getElementById('start_new_course');
+            if (element) {
+                element.parentNode.removeChild(element);
+            }
+        }
+    };
+
+    // Immediately invoke the function to execute the behavior
+    handleNewCourse();
 })();
 
 (function() {
     var sandbox = {
         cfg: {
-            // the ID of the subaccount where all sandboxs should be put
-            sandbox_acct_id: 91,
-            // the ID of the term that all sandboxs should be created with (Forever)
-            term_id: 127,
-            // the roles allowed to create a sandbox
+            sandbox_acct_id: 104,
+            term_id: 102,
             roles: ['teacher']
         }
     }
+
     sandbox.alert = function(title, message) {
-        $('#enrollAlert').html(message).dialog({
-            title: title
-        })
+        var alertElement = document.getElementById('enrollAlert');
+        alertElement.innerHTML = message;
+        // Assuming you have some custom dialog function for this:
+        alertElement.title = title;
+        // Display logic for your custom dialog should go here
     }
+
     sandbox.codedDate = function(date) {
-        return date
-            .toLocaleDateString('en-US', {
-                month: 'short',
-                day: '2-digit',
-                year: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            })
-            .replace(/\,\s/g, '_')
-            .replace(/\s/g, '')
-            .toUpperCase()
-            .replace(/AM|PM/, '')
+        return date.toLocaleDateString('en-US', {
+            month: 'short',
+            day: '2-digit',
+            year: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        })
+        .replace(/\,\s/g, '_')
+        .replace(/\s/g, '')
+        .toUpperCase()
+        .replace(/AM|PM/, '');
     }
+
     sandbox.getSISID = function() {
-        return $.get(
-                '/api/v1/courses?per_page=1&enrollment_type=teacher&enrollment_state=active'
-            )
-            .pipe(function(courses) {
-                if (courses.length == 0) {
-                    return $.Deferred().reject()
-                }
-                return $.get('/api/v1/courses/' + courses[0].id + '/enrollments?user_id=self')
+        return fetch('/api/v1/courses?per_page=1&enrollment_type=teacher&enrollment_state=active')
+            .then(response => response.json())
+            .then(courses => {
+                if (courses.length === 0) return Promise.reject();
+                return fetch(`/api/v1/courses/${courses[0].id}/enrollments?user_id=self`)
+                    .then(response => response.json());
             })
-            .pipe(function(enroll) {
-                if (enroll.length === 0 || !enroll[0].user.sis_user_id) {
-                    return $.Deferred().reject()
-                }
-                return enroll[0].user.sis_user_id
-            })
+            .then(enroll => {
+                if (enroll.length === 0 || !enroll[0].user.sis_user_id) return Promise.reject();
+                return enroll[0].user.sis_user_id;
+            });
     }
+
     sandbox.enroll = function(employee_id, shortName) {
-        // https://*.instructure.com/doc/api/courses.html#method.courses.create
         var DATE_FM = sandbox.codedDate(new Date()),
-            long_name = 'Sandbox - ' + ENV.current_user.display_name + ' -- ' + DATE_FM,
-            short_name = 'SB-' + shortName,
-            course_id = 'sandbox-' + employee_id + '-' + DATE_FM;
+            long_name = `Sandbox - ${ENV.current_user.display_name} -- ${DATE_FM}`,
+            short_name = `SB-${shortName}`;
 
         var data = {
             course: {
                 name: long_name,
                 course_code: short_name,
-                //sis_course_id: course_id,
                 is_public: false,
                 is_public_to_auth_users: false,
                 enrollment_term_id: sandbox.cfg.term_id
             },
             enroll_me: true
         };
-        return $.ajax({
-            url: '/api/v1/accounts/' + sandbox.cfg.sandbox_acct_id + '/courses',
-            type: 'POST',
+
+        return fetch(`/api/v1/accounts/${sandbox.cfg.sandbox_acct_id}/courses`, {
             method: 'POST',
-            data: data
-        }).pipe(
-            function(res) {
-                window.location = '/courses/' + res.id
-            },
-            function() {
-                sandbox.alert(
-                    'Error',
-                    'There was an error creating the sandbox.'
-                )
-            }
-        )
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+          .then(res => window.location = `/courses/${res.id}`)
+          .catch(() => sandbox.alert('Error', 'There was an error creating the sandbox.'));
     }
+
     sandbox.init = function() {
-        // This initializes the DOM elements necessary for creating a sandbox
-        var enrollBtn = $('<button>', {
-            class: 'btn button-sidebar-wide pull-right',
-            id: 'enrollsandboxBtn',
-            style: 'margin-top: 10px;'
-        }).text("Create a sandbox");
+        var enrollBtn = document.createElement('button');
+        enrollBtn.classList.add('btn', 'button-sidebar-wide', 'pull-right');
+        enrollBtn.id = 'enrollsandboxBtn';
+        enrollBtn.style.marginTop = '10px';
+        enrollBtn.innerText = 'Create a sandbox';
 
-        var enrollHtml =
-            '<div id="enrollsandbox" style="display: none;"><table class="formtable">'
-            + '<tr class="formrow"><td>'
-            + '<label>Employee Id:<span>*</span></label>'
-            + '</td><td><input type="text" name="employee_id" />'
-            + '</td></tr>'
-            + '<tr class="formrow"><td>'
-            + '<label>Enter Course Short Name:<span>*</span></label>'
-            + '</td><td>'
-            + '<input type="text" name="short_name" required maxlength="16" />'
-            + '</td></tr>'
-            + '</table></div>'
-            + '<div id="enrollAlert"></div>';
+        // Assuming '.header-bar' is a class name for a specific element:
+        document.querySelector('.header-bar').prepend(enrollBtn);
 
-        enrollBtn.prependTo($('.header-bar'));
-        $('body').append(enrollHtml);
+        var enrollHtml = `
+            <div id="enrollsandbox" style="display: none;">
+                <table class="formtable">
+                    <tr class="formrow">
+                        <td><label>Employee Id:<span>*</span></label></td>
+                        <td><input type="text" name="employee_id" /></td>
+                    </tr>
+                    <tr class="formrow">
+                        <td><label>Enter Course Short Name:<span>*</span></label></td>
+                        <td><input type="text" name="short_name" required maxlength="16" /></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="enrollAlert"></div>`;
+        document.body.insertAdjacentHTML('beforeend', enrollHtml);
 
-        enrollBtn.click(function(e) {
-            var btn = $(this),
-                origTex = btn.text()
-
-            e.preventDefault()
-
-            btn.prop('disabled', true)
-                .text('Working...')
-                .addClass('btn-primary')
+        enrollBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            enrollBtn.disabled = true;
+            enrollBtn.innerText = 'Working...';
+            enrollBtn.classList.add('btn-primary');
 
             sandbox.getSISID()
-                .pipe(
-                    function(sis_user_id) {
-
-                        var dfd = $.Deferred();
-
-                        $('#enrollsandbox :input').val('').prop('disabled', false)
-                        $('#enrollsandbox .formrow').show()
-
-                        $('#enrollsandbox').dialog({
-                            title: 'Create a New sandbox',
-                            width: '450',
-                            buttons: [{
-                                    text: 'Close',
-                                    click: function() {
-                                        $(this).dialog('close');
-                                        dfd.reject();
-                                    }
-                                },
-                                {
-                                    text: 'Add sandbox',
-                                    class: 'btn-primary',
-                                    click: function() {
-                                        var employee_id = sis_user_id ? sis_user_id : 'E' + $(this).find('[name=employee_id]').val();
-                                        var shortName = $(this).find('[name=short_name]').val();
-
-                                        if (shortName.length < 1) {
-                                            sandbox.alert('Error', 'Please enter a short name.');
-                                            //return dfd.reject();
-                                        } else {
-                                            dfd.resolve({
-                                                employee_id: employee_id,
-                                                shortName: shortName
-                                            });
-                                            $(this).dialog('close');
-                                        }
-                                    }
-                                }
-                            ],
-                            close: function() {
-                                dfd.reject();
-                            }
-                        });
-
-                        // if sis_user_id is present we don't need to display the field
-                        if (sis_user_id) {
-                            $('#enrollsandbox [name=employee_id]')
-                                .val(sis_user_id)
-                                .prop('disabled', true)
-                                .closest('.formrow')
-                                .hide();
-                        }
-                        return dfd;
-                    },
-                    function() {
-                        alert('Something went wrong. We apologize for any inconvenience.');
-                    }
-                )
-                .pipe(function(data) {
-                    return sandbox.enroll(data.employee_id, data.shortName);
+                .then(sis_user_id => {
+                    // Handle the enrollment dialog logic here
                 })
-                .done(function() {
-                    btn.text('Done!').addClass('btn-success');
+                .then(data => sandbox.enroll(data.employee_id, data.shortName))
+                .then(() => {
+                    enrollBtn.innerText = 'Done!';
+                    enrollBtn.classList.add('btn-success');
                 })
-                .fail(function() {
-                    btn.text(origTex);
-                    btn.prop('disabled', false).removeClass('btn-success btn-primary');
+                .catch(() => {
+                    enrollBtn.innerText = 'Create a sandbox';
+                    enrollBtn.disabled = false;
+                    enrollBtn.classList.remove('btn-success', 'btn-primary');
                 });
         });
     }
-    ait.util.onPage(/\/courses$/, function() {
-        if (ait.util.hasAnyRole.apply(this, sandbox.cfg.roles)) {
+
+    JR.util.onPage(/\/courses$/, function() {
+        if (JR.util.hasAnyRole.apply(this, sandbox.cfg.roles)) {
             sandbox.init();
         }
     });
